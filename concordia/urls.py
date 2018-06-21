@@ -20,6 +20,7 @@ from . import views
 from exporter import views as exporter_views
 from . import trans_urls
 from faq.views import FAQView
+from django.conf.urls import url, include
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
@@ -125,3 +126,6 @@ urlpatterns += [
             'document_root': settings.MEDIA_ROOT,
         }),
 ]
+urlpatterns += [
+              url('', include('django_prometheus_metrics.urls')),
+            ]

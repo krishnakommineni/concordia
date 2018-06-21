@@ -2,9 +2,10 @@ from logging import getLogger
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
+from django_prometheus_metrics.models import MetricsModelMixin
 
 
-class UserProfile(models.Model):
+class UserProfile(MetricsModelMixin('userprofile'),models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     myfile = models.FileField(upload_to='profile_pics/')
 
@@ -52,7 +53,7 @@ class MediaType:
     )
 
 
-class Collection(models.Model):
+class Collection(MetricsModelMixin('collection'),models.Model):
     title = models.CharField(max_length=50)
     slug = models.SlugField(max_length=50, unique=True)
     description = models.TextField(blank=True)
