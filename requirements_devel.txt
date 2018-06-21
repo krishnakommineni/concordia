@@ -6,4 +6,3 @@ pytest-cov
 pytest-django
 pytest-html
 pycodestyle
-django-prometheus-metrics
