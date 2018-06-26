@@ -19,10 +19,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.db import transaction
-from django.db.models import Q
-from django.db.models import Count, Sum
 
-PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 sys.path.append(BASE_DIR)

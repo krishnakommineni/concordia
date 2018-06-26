@@ -74,9 +74,6 @@ class Collection(models.Model):
             result = download_async_collection.delay(url)
             result.ready()
             result.get()
-            result2 = check_completeness.delay()
-            result2.ready()
-            result2.get()
         except Exception as e:
             print(e)
             pass
