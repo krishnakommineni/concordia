@@ -1,10 +1,12 @@
 import os
 import shutil
 from logging import getLogger
-from django.contrib.auth.models import User
+
 from django.conf import settings
-from importer.importer.tasks import download_async_collection, check_completeness
+from django.contrib.auth.models import User
 from django.db import models
+
+from importer.importer.tasks import download_async_collection
 
 
 class UserProfile(models.Model):
@@ -23,7 +25,7 @@ else:
         return ""
 
 
-logger = getLogger(__name__)
+logging = getLogger(__name__)
 
 
 class Status:
@@ -75,30 +77,40 @@ class Collection(models.Model):
             result.ready()
             result.get()
         except Exception as e:
-            print(e)
+            logging.error("Unable to copy images to collection: %s", e, exc_info=True)
             pass
 
-        if result2 and not result2.state == 'PENDING':
+        if result2 and not result2.state == "PENDING":
             if os.path.isdir(collection_path):
                 shutil.rmtree(collection_path)
-            shutil.copytree('/concordia_images', collection_path)
-            for the_dir in os.listdir('/concordia_images'):
-                shutil.rmtree(os.path.join('/concordia_images', the_dir))
+            shutil.copytree(settings.IMPORTER["IMAGES_FOLDER"], collection_path)
+            for the_dir in os.listdir(settings.IMPORTER["IMAGES_FOLDER"]):
+                shutil.rmtree(os.path.join(settings.IMPORTER["IMAGES_FOLDER"], the_dir))
 
     def create_assets_from_filesystem(self, collection_path):
         for root, dirs, files in os.walk(collection_path):
             for filename in files:
                 file_path = os.path.join(root, filename)
-                title = file_path.replace(collection_path + '/', '').split('/')[0]
-                media_url = file_path.replace(settings.MEDIA_ROOT, '')
-                sequence = int(os.path.splitext(filename)[0])
-                Asset.objects.create(title=title,
-                                     slug="{0}{1}".format(title, sequence),
-                                     description="{0} description".format(title),
-                                     media_url=media_url,
-                                     media_type='IMG',
-                                     sequence=sequence,
-                                     collection=self)
+                title = file_path.replace(collection_path + "/", "").split("/")[0]
+                # title = os.path.basename(collection_path)
+                media_url = file_path.replace(settings.MEDIA_ROOT, "")
+                try:
+                    sequence = int(os.path.splitext(filename)[0])
+                except Exception as e:
+                    logging.error(
+                        "Value error while converting file name into integer type: %s",
+                        e,
+                        exc_info=True,
+                    )
+                Asset.objects.create(
+                    title=title,
+                    slug="{0}{1}".format(title, sequence),
+                    description="{0} description".format(title),
+                    media_url=media_url,
+                    media_type="IMG",
+                    sequence=sequence,
+                    collection=self,
+                )
 
 
 class Subcollection(models.Model):

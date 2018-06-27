@@ -2,8 +2,8 @@
 import os
 import sys
 
-from machina import get_apps as get_machina_apps
 from machina import MACHINA_MAIN_STATIC_DIR, MACHINA_MAIN_TEMPLATE_DIR
+from machina import get_apps as get_machina_apps
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -222,3 +222,5 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 REGISTRATION_URLS = "registration.backends.simple.urls"
+
+USE_POSTGRES = True
