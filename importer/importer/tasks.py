@@ -1,11 +1,14 @@
 from __future__ import absolute_import, unicode_literals
 
+import logging
 from urllib.parse import urlparse
 
 import requests
 from celery import group, shared_task
 
 from importer.importer.models import Importer
+
+logger = logging.getLogger(__name__)
 
 
 @shared_task
@@ -64,8 +67,13 @@ def get_and_save_images(results_url):
 
             # All results should have an ID and an image_url
             if result.get("image_url") and result.get("id"):
-                identifier = urlparse(result["id"])[2].rstrip("/")
-                identifier = identifier.split("/")[-1]
+                try:
+                    identifier = urlparse(result["id"])[2].rstrip("/")
+                    identifier = identifier.split("/")[-1]
+                except Exception as err:
+                    logger.exception(err)
+                    # TODO: Fix exception(s)
+                    identifier = urlparse(result["id"])
                 task_signatures.append(download_item.s(identifier))
 
     group(task_signatures).apply_async()

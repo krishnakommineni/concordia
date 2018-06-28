@@ -16,7 +16,13 @@ DJANGO_SECRET_KEY = "changeme"
 IMPORTER = {
     "BASE_URL": "",
     # /concordia_images is a docker volume shared by importer and concordia
-    "IMAGES_FOLDER": "/concordia_images/",
+    "IMAGES_FOLDER": "/concordia_images",
     "ITEM_COUNT": "",
     "S3_BUCKET_NAME": "",
 }
+
+USE_POSTGRES = True
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(PROJECT_DIR)
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")

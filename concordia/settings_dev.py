@@ -29,7 +29,13 @@ CONCORDIA = {"netloc": "http://0.0.0.0:8000"}
 
 IMPORTER = {
     "BASE_URL": "",
-    "IMAGES_FOLDER": "/tmp/concordia_images/",
+    "IMAGES_FOLDER": "/tmp/concordia_images",
     "ITEM_COUNT": "",
     "S3_BUCKET_NAME": "",
 }
+
+USE_POSTGRES = True
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(PROJECT_DIR)
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")

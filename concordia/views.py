@@ -16,8 +16,14 @@ from django.views.generic import TemplateView
 from registration.backends.simple.views import RegistrationView
 
 from concordia.forms import ConcordiaUserEditForm, ConcordiaUserForm
-from concordia.models import (Asset, Collection, Tag, Transcription,
-                              UserAssetTagCollection, UserProfile)
+from concordia.models import (
+    Asset,
+    Collection,
+    Tag,
+    Transcription,
+    UserAssetTagCollection,
+    UserProfile,
+)
 
 # PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 # BASE_DIR = os.path.dirname(PROJECT_DIR)
@@ -212,7 +218,6 @@ class CollectionView(TemplateView):
         name = self.request.POST.get("name")
         url = self.request.POST.get("url")
         if name and url:
-            # slug = name.replace(" ", "-")
             slug = slugify(name)
             collection_path = os.path.join(settings.MEDIA_ROOT, "concordia", slug)
             c = Collection.objects.create(title=name, slug=slug, description=name)
@@ -220,7 +225,8 @@ class CollectionView(TemplateView):
             c.create_assets_from_filesystem(collection_path)
             c.is_active = 1
             try:
-                c.full_clean()
+                # TODO: Need to fix full clean to handle exceptions.
+                # c.full_clean()
                 c.save()
             except Exception as e:
                 logger.error(
