@@ -98,13 +98,10 @@ class Collection(models.Model):
                     media_url = file_path.replace(settings.MEDIA_ROOT, "")
                     try:
                         sequence = os.path.splitext(filename)[0]
+                    except ValueError as e:
+                        logging.exception("Value error while converting file name into integer type: {}".format(e))
                     except Exception as e:
-                        logging.error(
-                            "Value error while converting file name into integer type: %s",
-                            e,
-                            exc_info=True,
-                        )
-                        sequence = os.path.splitext(filename)[1]
+                        logging.exception("Error while converting file name into integer type: {}".format(e))
                         pass
                     Asset.objects.create(
                         title=title,
